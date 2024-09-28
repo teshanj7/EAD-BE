@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace OrderManagement.Model
+namespace EADEcommerceBE.Models
 {
     public class Order
     {
@@ -28,11 +28,4 @@ namespace OrderManagement.Model
         public DateTime OrderDate { get; set; }
     }
 
-    public class Product
-    {
-        public string ProductId { get; set; }
-        public string ProductName { get; set; }
-        public double Price { get; set; }
-        public int Quantity { get; set; }
-    }
 }
