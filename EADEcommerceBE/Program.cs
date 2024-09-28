@@ -1,3 +1,4 @@
+using EADEcommerceBE.Repositories;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,9 +15,11 @@ IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .Build();
 
-var mongoclient = new MongoClient(configuration.GetConnectionString("MongoDb"));
-builder.Services.AddSingleton<MongoClient>(mongoclient);
 
+var mongoClient = new MongoClient(configuration.GetConnectionString("MongoDB"));
+builder.Services.AddSingleton<IMongoClient>(mongoClient);
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 
 var app = builder.Build();
 

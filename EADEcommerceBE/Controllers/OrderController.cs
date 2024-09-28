@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EADEcommerceBE.Models;
+using EADEcommerceBE.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
-using OrderManagement.Model;
-using OrderManagement.Repositories;
 
-namespace OrderManagement.Controllers
+
+namespace EADEcommerceBE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
