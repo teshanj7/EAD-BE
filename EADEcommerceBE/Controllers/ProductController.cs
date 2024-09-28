@@ -1,4 +1,4 @@
-﻿using EadECommerce.Models;
+﻿using EADEcommerceBE.Models;
 using EADEcommerceBE.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;

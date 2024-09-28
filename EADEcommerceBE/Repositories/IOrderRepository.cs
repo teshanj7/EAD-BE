@@ -1,7 +1,8 @@
-﻿using MongoDB.Bson;
-using OrderManagement.Model;
+﻿using EADEcommerceBE.Models;
+using MongoDB.Bson;
 
-namespace OrderManagement.Repositories
+
+namespace EADEcommerceBE.Repositories
 {
     public interface IOrderRepository
     {

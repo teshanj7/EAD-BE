@@ -1,24 +1,25 @@
-using MongoDB.Driver;
 using EADEcommerceBE.Repositories;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
 
-// Configure Swagger for API documentation.
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Read configuration from appsettings.json
-IConfiguration configuration = builder.Configuration;
+IConfiguration configuration = new ConfigurationBuilder()
+    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+    .AddJsonFile("appsettings.json")
+    .Build();
 
-// Register IMongoClient as a Singleton
-builder.Services.AddSingleton<IMongoClient>(s =>
-    new MongoClient(configuration.GetConnectionString("MongoDb")));
 
-// Register the repository as Transient
+var mongoClient = new MongoClient(configuration.GetConnectionString("MongoDB"));
+builder.Services.AddSingleton<IMongoClient>(mongoClient);
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 
 var app = builder.Build();
 

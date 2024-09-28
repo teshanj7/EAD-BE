@@ -1,8 +1,9 @@
-﻿using MongoDB.Bson;
+﻿using EADEcommerceBE.Models;
+using EADEcommerceBE.Repositories;
+using MongoDB.Bson;
 using MongoDB.Driver;
-using OrderManagement.Model;
 
-namespace OrderManagement.Repositories
+namespace EADEcommerceBE.Repositories
 {
     public class OrderRepository : IOrderRepository
     {

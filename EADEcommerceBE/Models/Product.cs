@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace EadECommerce.Models
+namespace EADEcommerceBE.Models
 {
     public class Product
     {
