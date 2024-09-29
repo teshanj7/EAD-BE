@@ -10,8 +10,8 @@ namespace EADEcommerceBE.Models
         public ObjectId Id { get; set; }
         public required string Name { get; set; }
         public required string Email { get; set; }
-        public string Address { get; set; }
-        public String Phone { get; set; }
+        public string? Address { get; set; }
+        public string? Phone { get; set; }
         public required string UserType { get; set; }
         public required bool IsWebUser { get; set; }
         public required string Username { get; set; }
