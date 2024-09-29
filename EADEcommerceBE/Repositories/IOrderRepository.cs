@@ -1,18 +1,19 @@
 ﻿using EADEcommerceBE.Models;
 using MongoDB.Bson;
 
-
 namespace EADEcommerceBE.Repositories
 {
     public interface IOrderRepository
     {
-        Task<ObjectId> Create(Order order);
-        Task<Order> Get(ObjectId objectId);
-        Task<IEnumerable<Order>> GetAll();
-        Task<IEnumerable<Order>> GetByUserId(string userId);
-        Task<IEnumerable<Order>> GetByName(string name);
-        Task<bool> Update(ObjectId objectId, Order order);
-        Task<bool> Delete(ObjectId objectId);
+        ObjectId CreateOrder(Order order);
+        bool DeleteOrderById(ObjectId orderId);
+        Order GetOrderById(ObjectId orderId);
+        IEnumerable<Order> GetAllOrders();
+        IEnumerable<Order> GetOrdersByUserId(string userId);
+        bool UpdateOrderById(ObjectId orderId, Order order);
+        bool UpdatePartialDeliveryStatus(ObjectId orderId, string productVendor);
+        bool MarkOrderAsDelivered(ObjectId orderId);
+        bool CancelOrderById(ObjectId orderId, string cancellationNote);
+        Order TrackOrderById(ObjectId orderId);
     }
 }
-
