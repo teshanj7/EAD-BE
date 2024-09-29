@@ -1,5 +1,4 @@
 ﻿using EADEcommerceBE.Models;
-using EADEcommerceBE.Repositories;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -12,44 +11,43 @@ namespace EADEcommerceBE.Repositories
         public OrderRepository(IMongoClient client)
         {
             var database = client.GetDatabase("OrderDB");
-            var collection = database.GetCollection<Order>(nameof(Order));
-            _orders = collection;
+            _orders = database.GetCollection<Order>(nameof(Order));
         }
 
-        public async Task<ObjectId> Create(Order order)
+        public ObjectId CreateOrder(Order order)
         {
-            await _orders.InsertOneAsync(order);
+            _orders.InsertOne(order);
             return order.Id;
         }
 
-        public async Task<bool> Delete(ObjectId objectId)
+        public bool DeleteOrderById(ObjectId orderId)
         {
-            var filter = Builders<Order>.Filter.Eq(x => x.Id, objectId);
-            var result = await _orders.DeleteOneAsync(filter);
+            var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
+            var result = _orders.DeleteOne(filter);
             return result.DeletedCount == 1;
         }
 
-        public Task<Order> Get(ObjectId objectId)
+        public Order GetOrderById(ObjectId orderId)
         {
-            var filter = Builders<Order>.Filter.Eq(x => x.Id, objectId);
-            return _orders.Find(filter).FirstOrDefaultAsync();
+            var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
+            return _orders.Find(filter).FirstOrDefault();
         }
 
-        public async Task<IEnumerable<Order>> GetAll()
+        public IEnumerable<Order> GetAllOrders()
         {
-            return await _orders.Find(_ => true).ToListAsync();
+            return _orders.Find(_ => true).ToList();
         }
 
-        public async Task<IEnumerable<Order>> GetByUserId(string userId)
+        public IEnumerable<Order> GetOrdersByUserId(string userId)
         {
             var filter = Builders<Order>.Filter.Eq(x => x.UserId, userId);
-            return await _orders.Find(filter).ToListAsync();
+            return _orders.Find(filter).ToList();
         }
 
-        public async Task<bool> Update(ObjectId objectId, Order order)
+        public bool UpdateOrderById(ObjectId orderId, Order order)
         {
-            var filter = Builders<Order>.Filter.Eq(x => x.Id, objectId);
-            var update = Builders<Order>.Update
+            var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
+            var updateOrder = Builders<Order>.Update
                 .Set(x => x.UserId, order.UserId)
                 .Set(x => x.Products, order.Products)
                 .Set(x => x.TotalPrice, order.TotalPrice)
@@ -60,15 +58,48 @@ namespace EADEcommerceBE.Repositories
                 .Set(x => x.CancellationNote, order.CancellationNote)
                 .Set(x => x.OrderDate, order.OrderDate);
 
-            var result = await _orders.UpdateOneAsync(filter, update);
+            var result = _orders.UpdateOne(filter, updateOrder);
             return result.ModifiedCount == 1;
         }
 
-        public async Task<IEnumerable<Order>> GetByName(string name)
+        public bool UpdatePartialDeliveryStatus(ObjectId orderId, string productVendor)
         {
-            var filter = Builders<Order>.Filter.Eq(o => o.UserId, name);
-            return await _orders.Find(filter).ToListAsync();
+            var filter = Builders<Order>.Filter.And(
+                Builders<Order>.Filter.Eq(x => x.Id, orderId),
+                Builders<Order>.Filter.ElemMatch(x => x.Products, p => p.ProductVendor == productVendor) // Use ProductVendor here
+            );
+
+            var updateStatus = Builders<Order>.Update.Set(x => x.OrderStatus, "Partially Delivered");
+
+            var result = _orders.UpdateOne(filter, updateStatus);
+            return result.ModifiedCount == 1;
         }
 
+
+        public bool MarkOrderAsDelivered(ObjectId orderId)
+        {
+            var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
+            var updateStatus = Builders<Order>.Update.Set(x => x.OrderStatus, "Delivered");
+
+            var result = _orders.UpdateOne(filter, updateStatus);
+            return result.ModifiedCount == 1;
+        }
+
+        public bool CancelOrderById(ObjectId orderId, string cancellationNote)
+        {
+            var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
+            var updateCancel = Builders<Order>.Update
+                .Set(x => x.IsCancel, true)
+                .Set(x => x.CancellationNote, cancellationNote);
+
+            var result = _orders.UpdateOne(filter, updateCancel);
+            return result.ModifiedCount == 1;
+        }
+
+        public Order TrackOrderById(ObjectId orderId)
+        {
+            var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
+            return _orders.Find(filter).FirstOrDefault();
+        }
     }
 }
