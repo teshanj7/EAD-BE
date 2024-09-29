@@ -20,6 +20,7 @@ var mongoClient = new MongoClient(configuration.GetConnectionString("MongoDB"));
 builder.Services.AddSingleton<IMongoClient>(mongoClient);
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
