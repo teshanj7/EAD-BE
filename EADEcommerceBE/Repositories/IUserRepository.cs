@@ -9,6 +9,7 @@ namespace EADEcommerceBE.Repositories
         Task<User> GetSingleUser(ObjectId objectId);
         Task<IEnumerable<User>> GetAllUsers();
         Task<bool> UpdateUser(ObjectId objectId, User user);
+        Task<bool> UpdateAccountStatusById(ObjectId objectId, User user);
         Task<bool> DeleteUser(ObjectId objectId);
     }
 }

@@ -21,6 +21,7 @@ builder.Services.AddSingleton<IMongoClient>(mongoClient);
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IRatingRepository, RatingRepository>();
 
 var app = builder.Build();
 

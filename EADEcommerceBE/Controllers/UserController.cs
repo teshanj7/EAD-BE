@@ -19,31 +19,55 @@ namespace EADEcommerceBE.Controllers
         public async Task<IActionResult> Create(User user)
         {
             var id = await _userRepository.Create(user);
-            return new JsonResult(id.ToString());
+            return Ok(new { Message = "User created successfully", UserId = id.ToString() });
         }
-        [HttpGet("get/{id}")]
+        [HttpGet("getSingleUser/{id}")]
         public async Task<IActionResult> GetSingleUser(string id)
         {
             var user = await _userRepository.GetSingleUser(ObjectId.Parse(id));
             return new JsonResult(user);
         }
-        [HttpPut("{id}")]
+        [HttpPut("updateUser/{id}")]
         public async Task<IActionResult> UpdateUser(string id, User user)
         {
-            var User = await _userRepository.UpdateUser(ObjectId.Parse(id), user);
-            return new JsonResult(User);
+            if (!ObjectId.TryParse(id, out var id2))
+                return BadRequest("Invalid User");
+
+            var result = await _userRepository.UpdateUser(id2, user);
+            if (!result)
+                return NotFound("User not found.");
+            
+            return Ok("User updated successfully");
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var user = await _userRepository.DeleteUser(ObjectId.Parse(id));
-            return new JsonResult(user);
+            if (!ObjectId.TryParse(id, out var id2))
+                return BadRequest("Invalid User");
+
+            var result = await _userRepository.DeleteUser(id2);
+            if (!result)
+                return NotFound("User not found");
+
+            return Ok("User deleted successfully");
         }
-        [HttpGet("Fetch")]
+        [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var user = await _userRepository.GetAllUsers();
-            return new JsonResult(user);
+            var users = await _userRepository.GetAllUsers();
+            return new JsonResult(users);
+        }
+        [HttpPut("updateAccountStatus/{id}")]
+        public async Task<IActionResult> UpdateAccountStatus(string id, User user)
+        {
+            if (!ObjectId.TryParse(id, out var id2))
+                return BadRequest("Invalid Status");
+
+            var result = await _userRepository.UpdateAccountStatusById(id2, user);
+            if (!result)
+                return NotFound("Account status not found");
+
+            return Ok("Account Status updated successfully");
         }
     }
 }

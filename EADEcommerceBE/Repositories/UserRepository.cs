@@ -38,6 +38,15 @@ namespace EADEcommerceBE.Repositories
 
             return user;
         }
+        public async Task<bool> UpdateAccountStatusById(ObjectId objectId, User user)
+        {
+            var filter = Builders<User>.Filter.Eq(x => x.Id, objectId);
+            var updateAccountStatus = Builders<User>.Update
+                .Set(x => x.AccountStatus, user.AccountStatus);
+
+            var result = await _users.UpdateOneAsync(filter, updateAccountStatus);
+            return result.ModifiedCount == 1;
+        }
         public async Task<bool> UpdateUser(ObjectId objectId, User user)
         {
             var filter = Builders<User>.Filter.Eq(x => x.Id, objectId);
