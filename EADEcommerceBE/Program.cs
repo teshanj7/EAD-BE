@@ -1,5 +1,8 @@
 using EADEcommerceBE.Repositories;
 using MongoDB.Driver;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +37,36 @@ builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IRatingRepository, RatingRepository>();
 
+// Configure JWT authentication
+var jwtSection = configuration.GetSection("Jwt");
+var key = jwtSection.GetValue<string>("Key");
+
+// Check if the key is null or empty
+if (string.IsNullOrEmpty(key))
+{
+    throw new InvalidOperationException("JWT Key is not configured.");
+}
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = true; // Change to false if you're not using HTTPS
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidIssuer = jwtSection.GetValue<string>("Issuer"),
+        ValidAudience = jwtSection.GetValue<string>("Audience"),
+    };
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -48,6 +81,8 @@ app.UseHttpsRedirection();
 // Use CORS
 app.UseCors("AllowAllOrigins");
 
+// Enable authentication and authorization
+app.UseAuthentication();  
 app.UseAuthorization();
 
 app.MapControllers();

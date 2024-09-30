@@ -38,6 +38,18 @@ namespace EADEcommerceBE.Repositories
 
             return user;
         }
+        // Login API
+        public async Task<User?> Login(string email, string password)
+        {
+            var filter = Builders<User>.Filter.Eq(x => x.Email, email) & Builders<User>.Filter.Eq(x => x.Password, password);
+            var user = await _users.Find(filter).FirstOrDefaultAsync();
+            // Check if the user exists and their account status is "Active"
+            if (user != null && user.AccountStatus == "NotActivate")
+            {
+                return null; // Return null if account is not active
+            }
+            return user;
+        }
         public async Task<bool> UpdateAccountStatusById(ObjectId objectId, User user)
         {
             var filter = Builders<User>.Filter.Eq(x => x.Id, objectId);

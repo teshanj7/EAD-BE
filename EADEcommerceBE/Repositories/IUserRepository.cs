@@ -11,5 +11,6 @@ namespace EADEcommerceBE.Repositories
         Task<bool> UpdateUser(ObjectId objectId, User user);
         Task<bool> UpdateAccountStatusById(ObjectId objectId, User user);
         Task<bool> DeleteUser(ObjectId objectId);
+        Task<User?> Login(string email, string password);
     }
 }
