@@ -1,7 +1,9 @@
-﻿using EADEcommerceBE.Models;
+﻿using EADEcommerceBE.Middleware;
+using EADEcommerceBE.Models;
 using EADEcommerceBE.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 
 namespace EADEcommerceBE.Controllers
@@ -11,9 +13,11 @@ namespace EADEcommerceBE.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-        public UserController(IUserRepository userRepository)
+        private readonly IConfiguration _configuration;
+        public UserController(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
+            _configuration = configuration;
         }
         [HttpPost]
         public async Task<IActionResult> Create(User user)
@@ -68,6 +72,28 @@ namespace EADEcommerceBE.Controllers
                 return NotFound("Account status not found");
 
             return Ok("Account Status updated successfully");
+        }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
+        {
+            var user = await _userRepository.Login(loginRequest.Email, loginRequest.Password);
+
+            if (user == null)
+            {
+                return Unauthorized(new { Message = "Invalid email or password, or account is not activate." });
+            }
+
+            // Generate token
+            var tokenMiddleware = new TokenMiddleware(new RequestDelegate(context => Task.CompletedTask), _configuration);
+            var token = tokenMiddleware.GenerateToken(user);
+
+            return Ok(new
+            {
+                Message = "Login successful",
+                user.UserType,
+                user,
+                Token = token
+            });
         }
     }
 }
