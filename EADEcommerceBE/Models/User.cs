@@ -19,4 +19,11 @@ namespace EADEcommerceBE.Models
         public required string Password { get; set; }
         public double AvgRating { get; set; }
     }
+
+    public class LoginRequest
+    {
+        public required string Email { get; set; }
+        public required string Password { get; set; }
+    }
+
 }
