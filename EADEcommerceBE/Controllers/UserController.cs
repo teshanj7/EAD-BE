@@ -20,8 +20,12 @@ namespace EADEcommerceBE.Controllers
             _configuration = configuration;
         }
         [HttpPost]
-        public async Task<IActionResult> Create(User user)
+        public async Task<IActionResult> Create([FromBody] User user)
         {
+            if (user == null)
+            {
+                return BadRequest("User data is missing.");
+            }
             var id = await _userRepository.Create(user);
             return Ok(new { Message = "User created successfully", UserId = id.ToString() });
         }
@@ -59,15 +63,30 @@ namespace EADEcommerceBE.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userRepository.GetAllUsers();
-            return new JsonResult(users);
+            // Convert ObjectId to string for UserId field in each user
+            var userList = users.Select(user => new
+            {
+                userId = user.Id.ToString(),  // Convert ObjectId to string
+                user.Name,
+                user.Email,
+                user.Address,
+                user.Phone,
+                user.UserType,
+                user.IsWebUser,
+                user.Username,
+                user.AccountStatus,
+                user.AvgRating
+            });
+
+            return new JsonResult(userList);
         }
         [HttpPut("updateAccountStatus/{id}")]
-        public async Task<IActionResult> UpdateAccountStatus(string id, User user)
+        public async Task<IActionResult> UpdateAccountStatus(string id, [FromBody] string accountStatus)
         {
             if (!ObjectId.TryParse(id, out var id2))
                 return BadRequest("Invalid Status");
 
-            var result = await _userRepository.UpdateAccountStatusById(id2, user);
+            var result = await _userRepository.UpdateAccountStatusById(id2, accountStatus);
             if (!result)
                 return NotFound("Account status not found");
 
@@ -91,6 +110,7 @@ namespace EADEcommerceBE.Controllers
             {
                 Message = "Login successful",
                 user.UserType,
+                UserId = user.Id.ToString(),
                 user,
                 Token = token
             });
