@@ -35,7 +35,19 @@ namespace EADEcommerceBE.Controllers
         public async Task<IActionResult> GetRatingsByVendorId(string vendorId)
         {
             var ratings = await _ratingRepository.GetRatingsByVendorId(vendorId);
-            return new JsonResult(ratings);
+
+            // Convert ObjectId to string for Id field in each rating
+            var ratingList = ratings.Select(rating => new
+            {
+                ratingId = rating.Id.ToString(),  // Convert ObjectId to string
+                rating.Name,
+                rating.CusId,
+                rating.VendorId,
+                rating.Comment,
+                rating.RatingNo
+            });
+
+            return new JsonResult(ratingList);
         }
 
         [HttpPut("UpdateRatingById/{id}")]
