@@ -37,7 +37,19 @@ namespace EADEcommerceBE.Repositories
         {
             var filter = Builders<Rating>.Filter.Eq(x => x.VendorId, vendorId);
             var ratings = await _ratings.Find(filter).ToListAsync();
-            return ratings;
+            // Map the ratings if needed (you can modify this mapping as per your requirements)
+            var ratingList = ratings.Select(rating => new Rating
+            {
+                Id = rating.Id, // ObjectId will be handled as is
+                Name = rating.Name,
+                CusId = rating.CusId,
+                VendorId = rating.VendorId,
+                Comment = rating.Comment,
+                RatingNo = rating.RatingNo
+                // Add any other properties you might have in the Rating class
+            });
+
+            return ratingList;
         }
 
         public async Task<bool> UpdateRatingById(ObjectId objectId, Rating rating)
