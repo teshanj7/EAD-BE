@@ -29,7 +29,23 @@ namespace EADEcommerceBE.Repositories
         public async Task<IEnumerable<User>> GetAllUsers()
         {
             var users = await _users.Find(_ => true).ToListAsync();
-            return users;
+            // Map UserId (ObjectId) to string for each user
+            var userList = users.Select(user => new User
+            {
+                Id = user.Id,  // No need to change, it will be handled later in the controller
+                Name = user.Name,
+                Email = user.Email,
+                Address = user.Address,
+                Phone = user.Phone,
+                UserType = user.UserType,
+                IsWebUser = user.IsWebUser,
+                Username = user.Username,
+                AccountStatus = user.AccountStatus,
+                Password = user.Password,
+                AvgRating = user.AvgRating
+            });
+
+            return userList;
         }
         public Task<User> GetSingleUser(ObjectId objectId)
         {
@@ -44,17 +60,16 @@ namespace EADEcommerceBE.Repositories
             var filter = Builders<User>.Filter.Eq(x => x.Email, email) & Builders<User>.Filter.Eq(x => x.Password, password);
             var user = await _users.Find(filter).FirstOrDefaultAsync();
             // Check if the user exists and their account status is "Active"
-            if (user != null && user.AccountStatus == "NotActivate")
+            if (user != null && user.AccountStatus == "NotActivate" && user.UserType == "Customer")
             {
                 return null; // Return null if account is not active
             }
             return user;
         }
-        public async Task<bool> UpdateAccountStatusById(ObjectId objectId, User user)
+        public async Task<bool> UpdateAccountStatusById(ObjectId objectId, string accountStatus)
         {
             var filter = Builders<User>.Filter.Eq(x => x.Id, objectId);
-            var updateAccountStatus = Builders<User>.Update
-                .Set(x => x.AccountStatus, user.AccountStatus);
+            var updateAccountStatus = Builders<User>.Update.Set(x => x.AccountStatus, accountStatus);
 
             var result = await _users.UpdateOneAsync(filter, updateAccountStatus);
             return result.ModifiedCount == 1;
