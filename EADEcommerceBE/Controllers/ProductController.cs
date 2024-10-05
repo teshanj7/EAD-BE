@@ -40,7 +40,21 @@ namespace EADEcommerceBE.Controllers
         public async Task<IActionResult> GetAllProducts()
         {
             var products = await _productRepository.GetAllProducts();
-            return new JsonResult(products);
+
+            var productList = products.Select(product => new
+            {
+                productId = product.Id.ToString(),
+                product.ProductName,
+                product.ProductCategory,
+                product.ProductDescription,
+                product.ProductQuantity,
+                product.ProductVendor,
+                product.ProductStatus,
+                product.ProductAvailability,
+                product.ProductPrice
+            });
+
+            return new JsonResult(productList);
         }
 
         [HttpDelete("deleteProductById/{id}")]
