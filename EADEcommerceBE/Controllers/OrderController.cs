@@ -28,7 +28,7 @@ namespace EADEcommerceBE.Controllers
         [HttpGet("get/{id}")]
         public IActionResult GetOrderById(string id)
         {
-            var order = _orderRepository.GetOrderById(ObjectId.Parse(id));
+            var order = _orderRepository.GetOrderById(id);
             return new JsonResult(order);
         }
 
@@ -36,15 +36,15 @@ namespace EADEcommerceBE.Controllers
         [HttpGet("track/{id}")]
         public IActionResult TrackOrderById(string id)
         {
-            var order = _orderRepository.TrackOrderById(ObjectId.Parse(id));
+            var order = _orderRepository.TrackOrderById(id);
             return new JsonResult(order);
         }
 
         // Get all orders
         [HttpGet("getAllOrders")]
-        public IActionResult GetAllOrders()
+        public async Task<IActionResult> GetOrders()
         {
-            var orders = _orderRepository.GetAllOrders();
+            var orders = await _orderRepository.GetAllOrders();
             return new JsonResult(orders);
         }
 
@@ -60,7 +60,7 @@ namespace EADEcommerceBE.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateOrder(string id, Order order)
         {
-            var result = _orderRepository.UpdateOrderById(ObjectId.Parse(id), order);
+            var result = _orderRepository.UpdateOrderById(id, order);
             return new JsonResult(result);
         }
 
@@ -68,7 +68,7 @@ namespace EADEcommerceBE.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteOrder(string id)
         {
-            var result = _orderRepository.DeleteOrderById(ObjectId.Parse(id));
+            var result = _orderRepository.DeleteOrderById(id);
             return new JsonResult(result);
         }
 
@@ -76,7 +76,7 @@ namespace EADEcommerceBE.Controllers
         [HttpPut("cancel/{id}")]
         public IActionResult CancelOrder(string id, [FromBody] string cancellationNote)
         {
-            var result = _orderRepository.CancelOrderById(ObjectId.Parse(id), cancellationNote);
+            var result = _orderRepository.CancelOrderById(id, cancellationNote);
             return new JsonResult(result);
         }
 
@@ -84,7 +84,7 @@ namespace EADEcommerceBE.Controllers
         [HttpPut("markAsDelivered/{id}")]
         public IActionResult MarkOrderAsDelivered(string id)
         {
-            var result = _orderRepository.MarkOrderAsDelivered(ObjectId.Parse(id));
+            var result = _orderRepository.MarkOrderAsDelivered(id);
             return new JsonResult(result);
         }
 
@@ -92,7 +92,7 @@ namespace EADEcommerceBE.Controllers
         [HttpPut("partialDelivery/{id}/{vendorId}")]
         public IActionResult UpdatePartialDelivery(string id, string vendorId)
         {
-            var result = _orderRepository.UpdatePartialDeliveryStatus(ObjectId.Parse(id), vendorId);
+            var result = _orderRepository.UpdatePartialDeliveryStatus(id, vendorId);
             return new JsonResult(result);
         }
     }
