@@ -37,6 +37,7 @@ namespace EADEcommerceBE.Repositories
             {
                 Id = order.Id,
                 UserId = order.UserId,
+                Email = order.Email,
                 Products = order.Products,
                 TotalPrice = order.TotalPrice,
                 DeliveryStatus = order.DeliveryStatus,
@@ -59,6 +60,7 @@ namespace EADEcommerceBE.Repositories
             {
                 Id = order.Id,
                 UserId = order.UserId,
+                Email = order.Email,
                 Products = order.Products,
                 TotalPrice = order.TotalPrice,
                 DeliveryStatus = order.DeliveryStatus,
@@ -82,6 +84,7 @@ namespace EADEcommerceBE.Repositories
             {
                 Id = order.Id,
                 UserId = order.UserId,
+                Email = order.Email,
                 Products = order.Products,
                 TotalPrice = order.TotalPrice,
                 DeliveryStatus = order.DeliveryStatus,
@@ -100,6 +103,7 @@ namespace EADEcommerceBE.Repositories
             var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
             var updateOrder = Builders<Order>.Update
                 .Set(x => x.UserId, order.UserId)
+                .Set(x => x.Email, order.Email)
                 .Set(x => x.Products, order.Products)
                 .Set(x => x.TotalPrice, order.TotalPrice)
                 .Set(x => x.DeliveryStatus, order.DeliveryStatus)

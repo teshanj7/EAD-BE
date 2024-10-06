@@ -11,6 +11,8 @@ namespace EADEcommerceBE.Models
 
         public string UserId { get; set; }
 
+        public string Email { get; set; }
+
         public List<Product> Products { get; set; }
 
         public double TotalPrice { get; set; }
