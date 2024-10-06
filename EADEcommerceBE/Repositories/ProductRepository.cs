@@ -51,6 +51,28 @@ namespace EADEcommerceBE.Repositories
             return productList;
         }
 
+        public async Task<IEnumerable<Product>> GetProductsByVendor(string vendor)
+        {
+            var products = await _products.Find(product => product.ProductVendor == vendor).ToListAsync();
+
+            var productList = products.Select(product => new Product
+            {
+                Id = product.Id,
+                ProductName = product.ProductName,
+                ProductCategory = product.ProductCategory,
+                ProductDescription = product.ProductDescription,
+                ProductQuantity = product.ProductQuantity,
+                ProductVendor = product.ProductVendor,
+                ProductStatus = product.ProductStatus,
+                ProductAvailability = product.ProductAvailability,
+                ProductImage = product.ProductImage,
+                ProductPrice = product.ProductPrice,
+            });
+
+            return productList;
+        }
+
+
         public Task<Product> GetProductById(ObjectId productId)
         {
             var filter = Builders<Product>.Filter.Eq(x => x.Id, productId);

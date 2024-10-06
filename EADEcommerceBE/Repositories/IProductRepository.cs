@@ -9,6 +9,7 @@ namespace EADEcommerceBE.Repositories
         Task<ObjectId> CreateProduct(Product product);
         Task<Product> GetProductById(ObjectId productId);
         Task<IEnumerable<Product>> GetAllProducts();
+        Task<IEnumerable<Product>> GetProductsByVendor(string vendor);
         Task<IEnumerable<Product>> GetProductByName(string Name);
         Task<bool> UpdateProductById(Object id, Product product);
         Task<bool> DeleteProductById(ObjectId productId);
