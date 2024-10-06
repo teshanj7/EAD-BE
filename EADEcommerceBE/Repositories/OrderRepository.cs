@@ -27,10 +27,27 @@ namespace EADEcommerceBE.Repositories
             return result.DeletedCount == 1;
         }
 
-        public Order GetOrderById(string orderId)
+        public async Task<IEnumerable<Order>> GetOrderByIdAsync(string orderId)
         {
             var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
-            return _orders.Find(filter).FirstOrDefault();
+            var orders = await _orders.Find(filter).ToListAsync();
+
+            // Map to a new list of orders (this part is unnecessary if you just need to return the orders)
+            var orderList = orders.Select(order => new Order
+            {
+                Id = order.Id,
+                UserId = order.UserId,
+                Products = order.Products,
+                TotalPrice = order.TotalPrice,
+                DeliveryStatus = order.DeliveryStatus,
+                OrderStatus = order.OrderStatus,
+                OrderNumber = order.OrderNumber,
+                IsCancel = order.IsCancel,
+                CancellationNote = order.CancellationNote,
+                OrderDate = order.OrderDate
+            });
+
+            return orderList;
         }
 
         public async Task<IEnumerable<Order>> GetAllOrders()
@@ -55,12 +72,27 @@ namespace EADEcommerceBE.Repositories
             return orderList;
         }
 
-
-
-        public IEnumerable<Order> GetOrdersByUserId(string userId)
+        public async Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string userId)
         {
             var filter = Builders<Order>.Filter.Eq(x => x.UserId, userId);
-            return _orders.Find(filter).ToList();
+            var orders = await _orders.Find(filter).ToListAsync();
+
+            // Map to a new list of orders (this part is unnecessary if you just need to return the orders)
+            var orderList = orders.Select(order => new Order
+            {
+                Id = order.Id,
+                UserId = order.UserId,
+                Products = order.Products,
+                TotalPrice = order.TotalPrice,
+                DeliveryStatus = order.DeliveryStatus,
+                OrderStatus = order.OrderStatus,
+                OrderNumber = order.OrderNumber,
+                IsCancel = order.IsCancel,
+                CancellationNote = order.CancellationNote,
+                OrderDate = order.OrderDate
+            });
+
+            return orderList;
         }
 
         public bool UpdateOrderById(string orderId, Order order)
