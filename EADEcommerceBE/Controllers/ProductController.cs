@@ -57,6 +57,28 @@ namespace EADEcommerceBE.Controllers
             return new JsonResult(productList);
         }
 
+        [HttpGet("getProductsByVendor/{vendor}")]
+        public async Task<IActionResult> GetProductsByVendor(string vendor)
+        {
+            var products = await _productRepository.GetProductsByVendor(vendor);
+
+            var productList = products.Select(product => new
+            {
+                productId = product.Id.ToString(),
+                product.ProductName,
+                product.ProductCategory,
+                product.ProductDescription,
+                product.ProductQuantity,
+                product.ProductVendor,
+                product.ProductStatus,
+                product.ProductAvailability,
+                product.ProductPrice
+            });
+
+            return new JsonResult(productList);
+        }
+
+
         [HttpDelete("deleteProductById/{id}")]
         public async Task<IActionResult> DeleteProduct(string id)
         {
