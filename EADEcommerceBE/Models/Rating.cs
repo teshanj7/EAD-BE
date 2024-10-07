@@ -1,4 +1,10 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿/*********************************************** 
+    Rating Class
+    Attributes of the Rating Class
+    Dilshan W.A.B. - IT21343216
+ **********************************************/
+
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 
 namespace EADEcommerceBE.Models

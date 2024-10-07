@@ -1,4 +1,10 @@
-﻿using EADEcommerceBE.Models;
+﻿/*********************************************** 
+    Rating Controller
+    All API end points of User Management
+    Dilshan W.A.B. - IT21343216
+ **********************************************/
+
+using EADEcommerceBE.Models;
 using EADEcommerceBE.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +23,7 @@ namespace EADEcommerceBE.Controllers
             _ratingRepository = ratingRepository;
         }
 
+        //Create Rating
         [HttpPost]
         public async Task<IActionResult> Create(Rating rating)
         {
@@ -24,6 +31,7 @@ namespace EADEcommerceBE.Controllers
             return Ok(new { Message = "Rating created successfully", RatingId = id.ToString() });
         }
 
+        //Return Ratings using customer Id
         [HttpGet("GetRatingsByCusId/{cusId}")]
         public async Task<IActionResult> GetRatingsByCusId(string cusId)
         {
@@ -31,6 +39,7 @@ namespace EADEcommerceBE.Controllers
             return new JsonResult(ratings);
         }
 
+        //Return Ratings using Vendor Id
         [HttpGet("GetRatingsByVendorId/{vendorId}")]
         public async Task<IActionResult> GetRatingsByVendorId(string vendorId)
         {
@@ -50,6 +59,7 @@ namespace EADEcommerceBE.Controllers
             return new JsonResult(ratingList);
         }
 
+        //Update Rating using rating Id
         [HttpPut("UpdateRatingById/{id}")]
         public async Task<IActionResult> UpdateRatingById(string id, [FromBody] Rating rating)
         {
@@ -63,6 +73,7 @@ namespace EADEcommerceBE.Controllers
             return Ok("Rating updated successfully");
         }
 
+        //Delete Rating using Rating Id
         [HttpDelete("DeleteRatingById/{id}")]
         public async Task<IActionResult> DeleteRatingById(string id)
         {
