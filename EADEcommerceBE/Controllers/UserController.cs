@@ -56,8 +56,29 @@ namespace EADEcommerceBE.Controllers
             var result = await _userRepository.UpdateUser(id2, user);
             if (!result)
                 return NotFound("User not found.");
-            
-            return Ok("User updated successfully");
+
+            // Retrieve the updated user details
+            var updatedUser = await _userRepository.GetSingleUser(id2);
+            if (updatedUser == null)
+                return NotFound("Updated user not found."); // In case of unexpected error
+
+            return Ok(new
+            {
+                Message = "User updated successfully",
+                User = new
+                {
+                    UserId = updatedUser.Id.ToString(),
+                    updatedUser.Name,
+                    updatedUser.Email,
+                    updatedUser.Address,
+                    updatedUser.Phone,
+                    updatedUser.UserType,
+                    updatedUser.IsWebUser,
+                    updatedUser.Username,
+                    updatedUser.AccountStatus,
+                    updatedUser.AvgRating
+                }
+            });
         }
 
         //Delete User using user Id
