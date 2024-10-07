@@ -1,3 +1,8 @@
+/*********************************************** 
+    Program.cs file
+    Starting point of the Web API
+ **********************************************/
+
 using EADEcommerceBE.Repositories;
 using MongoDB.Driver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

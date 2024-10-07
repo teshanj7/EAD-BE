@@ -1,4 +1,9 @@
-﻿
+﻿/*********************************************** 
+    Repository Interface of Product Mgmt
+    All the methods within Product Mgmt
+    Jayakody T.N.A. - IT21345296
+ **********************************************/
+
 using EADEcommerceBE.Models;
 using MongoDB.Bson;
 

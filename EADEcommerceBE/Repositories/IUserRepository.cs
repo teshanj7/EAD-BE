@@ -1,4 +1,10 @@
-﻿using EADEcommerceBE.Models;
+﻿/*********************************************** 
+    Repository Interface of User Mgmt
+    All the methods within User Mgmt
+    Dilshan W.A.B. - IT21343216
+ **********************************************/
+
+using EADEcommerceBE.Models;
 using MongoDB.Bson;
 
 namespace EADEcommerceBE.Repositories

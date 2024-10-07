@@ -1,4 +1,10 @@
-﻿using MongoDB.Bson;
+﻿/*********************************************** 
+    Product Class
+    Attributes of the Product Class
+    Jayakody T.N.A. - IT21345296
+ **********************************************/
+
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace EADEcommerceBE.Models

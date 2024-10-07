@@ -1,4 +1,10 @@
-﻿using EADEcommerceBE.Models;
+﻿/*********************************************** 
+    Order Controller
+    All API end points of Order Management
+    Gunatilleke M.B.D.S. - IT21321436
+ **********************************************/
+
+using EADEcommerceBE.Models;
 using EADEcommerceBE.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;

@@ -1,4 +1,10 @@
-﻿using EADEcommerceBE.Models;
+﻿/*********************************************** 
+    Repository Interface of Order Mgmt
+    All the methods within Order Mgmt
+    Gunatilleke M.B.D.S. - IT21321436
+ **********************************************/
+
+using EADEcommerceBE.Models;
 using MongoDB.Bson;
 
 namespace EADEcommerceBE.Repositories

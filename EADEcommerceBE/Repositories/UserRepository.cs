@@ -1,4 +1,10 @@
-﻿using EADEcommerceBE.Models;
+﻿/*********************************************** 
+    Repository Class of User Mgmt
+    All the methods within User Mgmt
+    Dilshan W.A.B. - IT21343216
+ **********************************************/
+
+using EADEcommerceBE.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -14,11 +20,15 @@ namespace EADEcommerceBE.Repositories
 
             _users = collection;
         }
+
+        //Create new user
         public async Task<ObjectId> Create(User user)
         {
             await _users.InsertOneAsync(user);
             return user.Id;
         }
+
+        //Delete User using user Id
         public async Task<bool> DeleteUser(ObjectId objectId)
         {
             var filter = Builders<User>.Filter.Eq(x => x.Id, objectId);
@@ -26,6 +36,8 @@ namespace EADEcommerceBE.Repositories
 
             return result.DeletedCount == 1;
         }
+
+        //Fetch all users
         public async Task<IEnumerable<User>> GetAllUsers()
         {
             var users = await _users.Find(_ => true).ToListAsync();
@@ -47,6 +59,8 @@ namespace EADEcommerceBE.Repositories
 
             return userList;
         }
+
+        //Return User using user id
         public Task<User> GetSingleUser(ObjectId objectId)
         {
             var filter = Builders<User>.Filter.Eq(x => x.Id, objectId);
@@ -66,6 +80,8 @@ namespace EADEcommerceBE.Repositories
             }
             return user;
         }
+
+        //Update account status using user id
         public async Task<bool> UpdateAccountStatusById(ObjectId objectId, string accountStatus)
         {
             var filter = Builders<User>.Filter.Eq(x => x.Id, objectId);
@@ -74,6 +90,8 @@ namespace EADEcommerceBE.Repositories
             var result = await _users.UpdateOneAsync(filter, updateAccountStatus);
             return result.ModifiedCount == 1;
         }
+
+        //Update User using user id
         public async Task<bool> UpdateUser(ObjectId objectId, User user)
         {
             var filter = Builders<User>.Filter.Eq(x => x.Id, objectId);

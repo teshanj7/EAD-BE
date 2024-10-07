@@ -1,4 +1,10 @@
-﻿using EADEcommerceBE.Models;
+﻿/*********************************************** 
+    Repository Class of Rating Mgmt
+    All the methods within Rating Mgmt
+    Dilshan W.A.B. - IT21343216
+ **********************************************/
+
+using EADEcommerceBE.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -14,12 +20,15 @@ namespace EADEcommerceBE.Repositories
 
             _ratings = collection;
         }
+
+        //Create Rating
         public async Task<ObjectId> CreateRating(Rating rating)
         {
             await _ratings.InsertOneAsync(rating);
             return rating.Id;
         }
 
+        //Delete Rating using Rating Id
         public async Task<bool> DeleteRatingById(ObjectId objectId)
         {
             var filter = Builders<Rating>.Filter.Eq(x => x.Id, objectId);
@@ -27,12 +36,16 @@ namespace EADEcommerceBE.Repositories
 
             return result.DeletedCount == 1;
         }
+
+        //Return Ratings using customer Id
         public async Task<IEnumerable<Rating>> GetRatingsByCusId(string cusId)
         {
             var filter = Builders<Rating>.Filter.Eq(x => x.CusId, cusId);
             var ratings = await _ratings.Find(filter).ToListAsync();
             return ratings;
         }
+
+        //Return Ratings using Vendor Id
         public async Task<IEnumerable<Rating>> GetRatingsByVendorId(string vendorId)
         {
             var filter = Builders<Rating>.Filter.Eq(x => x.VendorId, vendorId);
@@ -52,6 +65,7 @@ namespace EADEcommerceBE.Repositories
             return ratingList;
         }
 
+        //Update Rating using rating Id
         public async Task<bool> UpdateRatingById(ObjectId objectId, Rating rating)
         {
             var filter = Builders<Rating>.Filter.Eq(x => x.Id, objectId);

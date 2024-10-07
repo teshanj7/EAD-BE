@@ -1,4 +1,10 @@
-﻿using MongoDB.Bson;
+﻿/*********************************************** 
+    Order Class
+    Attributes of the Order Class
+    Gunatilleke M.B.D.S. - IT21321436
+ **********************************************/
+
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace EADEcommerceBE.Models
