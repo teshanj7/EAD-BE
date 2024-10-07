@@ -28,7 +28,22 @@ namespace EADEcommerceBE.Controllers
         public async Task<IActionResult> GetRatingsByCusId(string cusId)
         {
             var ratings = await _ratingRepository.GetRatingsByCusId(cusId);
-            return new JsonResult(ratings);
+            // Convert ObjectId to string for Id field in each rating
+            var ratingList = ratings.Select(rating => new
+            {
+                ratingId = rating.Id.ToString(),  // Convert ObjectId to string
+                rating.Name,
+                rating.CusId,
+                rating.VendorId,
+                rating.Comment,
+                rating.RatingNo
+            });
+
+            return Ok(new
+            {
+                Message = "Ratings retrieved successfully",
+                Ratings = ratingList
+            });
         }
 
         [HttpGet("GetRatingsByVendorId/{vendorId}")]
@@ -60,7 +75,30 @@ namespace EADEcommerceBE.Controllers
             if (!result)
                 return NotFound("Rating not found or no changes made");
 
-            return Ok("Rating updated successfully");
+            // Check if CusId is null
+            if (rating.CusId == null)
+                return BadRequest("CusId cannot be null");
+
+            // Retrieve the updated rating
+            var updatedRating = await _ratingRepository.GetRatingsByCusId(rating.CusId);
+            var ratingDetails = updatedRating.FirstOrDefault(r => r.Id == ratingObjectId);
+
+            if (ratingDetails == null)
+                return NotFound("Updated rating not found");
+
+            return Ok(new
+            {
+                Message = "Rating updated successfully",
+                Rating = new
+                {
+                    Id = ratingDetails.Id.ToString(),
+                    Name = ratingDetails.Name,
+                    CusId = ratingDetails.CusId,
+                    VendorId = ratingDetails.VendorId,
+                    Comment = ratingDetails.Comment,
+                    RatingNo = ratingDetails.RatingNo
+                }
+            });
         }
 
         [HttpDelete("DeleteRatingById/{id}")]
