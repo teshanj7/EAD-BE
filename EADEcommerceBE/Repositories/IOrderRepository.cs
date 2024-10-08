@@ -11,7 +11,7 @@ namespace EADEcommerceBE.Repositories
 {
     public interface IOrderRepository
     {
-        string CreateOrder(Order order);
+        Task<Order> CreateOrder(Order order);
         bool DeleteOrderById(string orderId);
         Task<IEnumerable<Order>> GetOrderByIdAsync(string orderId);
         Task<IEnumerable<Order>> GetAllOrders();
