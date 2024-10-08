@@ -21,11 +21,38 @@ namespace EADEcommerceBE.Repositories
         }
 
         //Order Create
-        public string CreateOrder(Order order)
+        public async Task<Order> CreateOrder(Order order)
         {
-            _orders.InsertOne(order);
-            return order.Id;
+
+            if (string.IsNullOrEmpty(order.Id))
+            {
+                order.Id = Guid.NewGuid().ToString(); // Generate a unique string ID
+            }
+
+            // Optionally set the OrderDate to the current date if it's not already set
+            if (order.OrderDate == DateTime.MinValue)
+            {
+                order.OrderDate = DateTime.UtcNow; // Use UTC for consistency
+            }
+
+            try
+            {
+                // Insert the order asynchronously
+                await _orders.InsertOneAsync(order);
+
+                // Return the created order
+                return order;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (use your logging mechanism here)
+                // Example: _logger.LogError(ex, "Failed to create order.");
+
+                // Handle specific exceptions if needed
+                throw new ApplicationException("An error occurred while creating the order.", ex);
+            }
         }
+
 
         //Delete an order using order id
         public bool DeleteOrderById(string orderId)
