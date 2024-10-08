@@ -1,4 +1,10 @@
-﻿using EADEcommerceBE.Middleware;
+﻿/*********************************************** 
+    User Controller
+    All API end points of User Management
+    Dilshan W.A.B. - IT21343216
+ **********************************************/
+
+using EADEcommerceBE.Middleware;
 using EADEcommerceBE.Models;
 using EADEcommerceBE.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +25,8 @@ namespace EADEcommerceBE.Controllers
             _userRepository = userRepository;
             _configuration = configuration;
         }
+
+        //Create new user
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] User user)
         {
@@ -29,12 +37,16 @@ namespace EADEcommerceBE.Controllers
             var id = await _userRepository.Create(user);
             return Ok(new { Message = "User created successfully", UserId = id.ToString() });
         }
+
+        //Return User using user id
         [HttpGet("getSingleUser/{id}")]
         public async Task<IActionResult> GetSingleUser(string id)
         {
             var user = await _userRepository.GetSingleUser(ObjectId.Parse(id));
             return new JsonResult(user);
         }
+
+        //Update User using user id
         [HttpPut("updateUser/{id}")]
         public async Task<IActionResult> UpdateUser(string id, User user)
         {
@@ -68,6 +80,8 @@ namespace EADEcommerceBE.Controllers
                 }
             });
         }
+
+        //Delete User using user Id
         [HttpDelete("deleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -80,6 +94,8 @@ namespace EADEcommerceBE.Controllers
 
             return Ok("User deleted successfully");
         }
+
+        //Fetch all users
         [HttpGet("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -101,6 +117,8 @@ namespace EADEcommerceBE.Controllers
 
             return new JsonResult(userList);
         }
+
+        //Update account status using user id
         [HttpPut("updateAccountStatus/{id}")]
         public async Task<IActionResult> UpdateAccountStatus(string id, [FromBody] string accountStatus)
         {
@@ -113,6 +131,8 @@ namespace EADEcommerceBE.Controllers
 
             return Ok("Account Status updated successfully");
         }
+
+        //User Login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {

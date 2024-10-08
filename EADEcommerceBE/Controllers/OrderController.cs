@@ -1,4 +1,10 @@
-﻿using EADEcommerceBE.Models;
+﻿/*********************************************** 
+    Order Controller
+    All API end points of Order Management
+    Gunatilleke M.B.D.S. - IT21321436
+ **********************************************/
+
+using EADEcommerceBE.Models;
 using EADEcommerceBE.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -26,9 +32,9 @@ namespace EADEcommerceBE.Controllers
 
         // Get order by ID
         [HttpGet("get/{id}")]
-        public IActionResult GetOrderById(string id)
+        public async Task<IActionResult> GetOrderById(string id)
         {
-            var order = _orderRepository.GetOrderById(id);
+            var order = await _orderRepository.GetOrderByIdAsync(id);
             return new JsonResult(order);
         }
 
@@ -50,9 +56,9 @@ namespace EADEcommerceBE.Controllers
 
         // Get orders by user ID
         [HttpGet("getOrdersByUser/{userId}")]
-        public IActionResult GetOrdersByUserId(string userId)
+        public async Task<IActionResult> GetOrdersByUserId(string userId)
         {
-            var orders = _orderRepository.GetOrdersByUserId(userId);
+            var orders = await _orderRepository.GetOrdersByUserIdAsync(userId);
             return new JsonResult(orders);
         }
 

@@ -1,4 +1,10 @@
-﻿using EADEcommerceBE.Models;
+﻿/*********************************************** 
+    Repository Class of Order Mgmt
+    All the methods within Order Mgmt
+    Gunatilleke M.B.D.S. - IT21321436
+ **********************************************/
+
+using EADEcommerceBE.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -14,12 +20,14 @@ namespace EADEcommerceBE.Repositories
             _orders = database.GetCollection<Order>(nameof(Order));
         }
 
+        //Order Create
         public string CreateOrder(Order order)
         {
             _orders.InsertOne(order);
             return order.Id;
         }
 
+        //Delete an order using order id
         public bool DeleteOrderById(string orderId)
         {
             var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
@@ -27,12 +35,32 @@ namespace EADEcommerceBE.Repositories
             return result.DeletedCount == 1;
         }
 
-        public Order GetOrderById(string orderId)
+        //Fetch an order by order id
+        public async Task<IEnumerable<Order>> GetOrderByIdAsync(string orderId)
         {
             var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
-            return _orders.Find(filter).FirstOrDefault();
-        }
+            var orders = await _orders.Find(filter).ToListAsync();
 
+            // Map to a new list of orders (this part is unnecessary if you just need to return the orders)
+            var orderList = orders.Select(order => new Order
+            {
+                Id = order.Id,
+                UserId = order.UserId,
+                Email = order.Email,
+                Products = order.Products,
+                TotalPrice = order.TotalPrice,
+                DeliveryStatus = order.DeliveryStatus,
+                OrderStatus = order.OrderStatus,
+                OrderNumber = order.OrderNumber,
+                IsCancel = order.IsCancel,
+                CancellationNote = order.CancellationNote,
+                OrderDate = order.OrderDate
+            });
+
+            return orderList;
+        }
+        
+        //Fetch all orders
         public async Task<IEnumerable<Order>> GetAllOrders()
         {
             var orders = await _orders.Find(_ => true).ToListAsync();  // Asynchronously fetching the orders from MongoDB
@@ -42,6 +70,7 @@ namespace EADEcommerceBE.Repositories
             {
                 Id = order.Id,
                 UserId = order.UserId,
+                Email = order.Email,
                 Products = order.Products,
                 TotalPrice = order.TotalPrice,
                 DeliveryStatus = order.DeliveryStatus,
@@ -55,19 +84,38 @@ namespace EADEcommerceBE.Repositories
             return orderList;
         }
 
-
-
-        public IEnumerable<Order> GetOrdersByUserId(string userId)
+        //Fetch orders by Customer Id
+        public async Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string userId)
         {
             var filter = Builders<Order>.Filter.Eq(x => x.UserId, userId);
-            return _orders.Find(filter).ToList();
+            var orders = await _orders.Find(filter).ToListAsync();
+
+            // Map to a new list of orders (this part is unnecessary if you just need to return the orders)
+            var orderList = orders.Select(order => new Order
+            {
+                Id = order.Id,
+                UserId = order.UserId,
+                Email = order.Email,
+                Products = order.Products,
+                TotalPrice = order.TotalPrice,
+                DeliveryStatus = order.DeliveryStatus,
+                OrderStatus = order.OrderStatus,
+                OrderNumber = order.OrderNumber,
+                IsCancel = order.IsCancel,
+                CancellationNote = order.CancellationNote,
+                OrderDate = order.OrderDate
+            });
+
+            return orderList;
         }
 
+        //Update Order using order Id
         public bool UpdateOrderById(string orderId, Order order)
         {
             var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
             var updateOrder = Builders<Order>.Update
                 .Set(x => x.UserId, order.UserId)
+                .Set(x => x.Email, order.Email)
                 .Set(x => x.Products, order.Products)
                 .Set(x => x.TotalPrice, order.TotalPrice)
                 .Set(x => x.DeliveryStatus, order.DeliveryStatus)
@@ -81,6 +129,7 @@ namespace EADEcommerceBE.Repositories
             return result.ModifiedCount == 1;
         }
 
+        //Update Partially Delivery Status using the Order Id
         public bool UpdatePartialDeliveryStatus(string orderId, string productVendor)
         {
             var filter = Builders<Order>.Filter.And(
@@ -94,7 +143,7 @@ namespace EADEcommerceBE.Repositories
             return result.ModifiedCount == 1;
         }
 
-
+        //Update Delivery Status using the order Id
         public bool MarkOrderAsDelivered(string orderId)
         {
             var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
@@ -104,6 +153,7 @@ namespace EADEcommerceBE.Repositories
             return result.ModifiedCount == 1;
         }
 
+        //Cancel Order using the order Id
         public bool CancelOrderById(string orderId, string cancellationNote)
         {
             var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);
@@ -115,6 +165,7 @@ namespace EADEcommerceBE.Repositories
             return result.ModifiedCount == 1;
         }
 
+        //Get order details using the order Id
         public Order TrackOrderById(string orderId)
         {
             var filter = Builders<Order>.Filter.Eq(x => x.Id, orderId);

@@ -1,4 +1,10 @@
-﻿using EADEcommerceBE.Models;
+﻿/*********************************************** 
+    Repository Interface of Order Mgmt
+    All the methods within Order Mgmt
+    Gunatilleke M.B.D.S. - IT21321436
+ **********************************************/
+
+using EADEcommerceBE.Models;
 using MongoDB.Bson;
 
 namespace EADEcommerceBE.Repositories
@@ -7,9 +13,9 @@ namespace EADEcommerceBE.Repositories
     {
         string CreateOrder(Order order);
         bool DeleteOrderById(string orderId);
-        Order GetOrderById(string orderId);
+        Task<IEnumerable<Order>> GetOrderByIdAsync(string orderId);
         Task<IEnumerable<Order>> GetAllOrders();
-        IEnumerable<Order> GetOrdersByUserId(string userId);
+        Task<IEnumerable<Order>> GetOrdersByUserIdAsync(string userId);
         bool UpdateOrderById(string orderId, Order order);
         bool UpdatePartialDeliveryStatus(string orderId, string productVendor);
         bool MarkOrderAsDelivered(string orderId);

@@ -1,4 +1,9 @@
-﻿
+﻿/*********************************************** 
+    Repository Class of Product Mgmt
+    All the methods within Product Mgmt
+    Jayakody T.N.A. - IT21345296
+ **********************************************/
+
 using EADEcommerceBE.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -16,12 +21,14 @@ namespace EADEcommerceBE.Repositories
             _products = collection;
         }
 
+        //Create Product
         public async Task<ObjectId> CreateProduct(Product product)
         {
             await _products.InsertOneAsync(product);
             return product.Id;
         }
 
+        //Delete product using Product Id
         public async Task<bool> DeleteProductById(ObjectId productId)
         {
             var filter = Builders<Product>.Filter.Eq(x => x.Id, productId);
@@ -30,6 +37,7 @@ namespace EADEcommerceBE.Repositories
             return result.DeletedCount == 1;
         }
 
+        //Fetch all products
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
             var products = await _products.Find(_ => true).ToListAsync();
@@ -51,6 +59,7 @@ namespace EADEcommerceBE.Repositories
             return productList;
         }
 
+        //Return Products using Vendor Id
         public async Task<IEnumerable<Product>> GetProductsByVendor(string vendor)
         {
             var products = await _products.Find(product => product.ProductVendor == vendor).ToListAsync();
@@ -72,7 +81,7 @@ namespace EADEcommerceBE.Repositories
             return productList;
         }
 
-
+        //Return Product By Product Id
         public Task<Product> GetProductById(ObjectId productId)
         {
             var filter = Builders<Product>.Filter.Eq(x => x.Id, productId);
@@ -82,6 +91,7 @@ namespace EADEcommerceBE.Repositories
 
         }
 
+        //Return Product By Product Name
         public async Task<IEnumerable<Product>> GetProductByName(string Name)
         {
             var filter = Builders<Product>.Filter.Eq(x => x.ProductName, Name);
@@ -90,6 +100,7 @@ namespace EADEcommerceBE.Repositories
             return product;
         }
 
+        //Update Product Availability using product Id
         public async Task<bool> UpdateProductAvailability(ObjectId productId, Product product)
         {
             var filter = Builders<Product>.Filter.Eq(x => x.Id, productId);
@@ -100,6 +111,7 @@ namespace EADEcommerceBE.Repositories
             return result.ModifiedCount == 1;
         }
 
+        //Update Product using product Id
         public async Task<bool> UpdateProductById(object id, Product product)
         {
             var filter = Builders<Product>.Filter.Eq(x => x.Id, id);
@@ -118,6 +130,7 @@ namespace EADEcommerceBE.Repositories
             return result.ModifiedCount == 1;
         }
 
+        //Update Product Status using product Id
         public async Task<bool> UpdateProductStatusById(object id, Product product)
         {
             var filter = Builders<Product>.Filter.Eq(x => x.Id, id);

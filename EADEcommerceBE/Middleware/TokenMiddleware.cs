@@ -1,4 +1,9 @@
-﻿using EADEcommerceBE.Models;
+﻿/*********************************************** 
+    Token Middleware class
+    All methods regarding Token Generation and JWT 
+ **********************************************/
+
+using EADEcommerceBE.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
