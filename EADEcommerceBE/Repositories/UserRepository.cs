@@ -74,10 +74,10 @@ namespace EADEcommerceBE.Repositories
             var filter = Builders<User>.Filter.Eq(x => x.Email, email) & Builders<User>.Filter.Eq(x => x.Password, password);
             var user = await _users.Find(filter).FirstOrDefaultAsync();
             // Check if the user exists and their account status is "Active"
-            if (user != null && user.AccountStatus == "NotActivate" && user.UserType == "Customer")
-            {
-                return null; // Return null if account is not active
-            }
+            //if (user != null)
+            //{
+            //    return null; // Return null if account is not active
+            //}
             return user;
         }
 
