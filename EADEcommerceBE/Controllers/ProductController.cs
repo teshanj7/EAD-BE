@@ -61,6 +61,7 @@ namespace EADEcommerceBE.Controllers
                 product.ProductQuantity,
                 product.ProductVendor,
                 product.ProductStatus,
+                product.ProductImage,
                 product.ProductAvailability,
                 product.ProductPrice
             });
@@ -82,6 +83,7 @@ namespace EADEcommerceBE.Controllers
                 product.ProductDescription,
                 product.ProductQuantity,
                 product.ProductVendor,
+                product.ProductImage,
                 product.ProductStatus,
                 product.ProductAvailability,
                 product.ProductPrice
