@@ -138,10 +138,10 @@ namespace EADEcommerceBE.Controllers
         {
             var user = await _userRepository.Login(loginRequest.Email, loginRequest.Password);
 
-            //if (user == null)
-            //{
-            //    return Unauthorized(new { Message = "Invalid email or password, or account is not activate." });
-            //}
+            if (user == null)
+            {
+                return Unauthorized(new { Message = "Invalid email or password, or account is not activate." });
+            }
 
             // Generate token
             var tokenMiddleware = new TokenMiddleware(new RequestDelegate(context => Task.CompletedTask), _configuration);
