@@ -24,10 +24,10 @@ namespace EADEcommerceBE.Controllers
 
         // Create a new order
         [HttpPost]
-        public IActionResult Create(Order order)
+        public async Task<IActionResult> Create(Order order)
         {
-            var id = _orderRepository.CreateOrder(order);
-            return new JsonResult(id.ToString());
+            var id = await _orderRepository.CreateOrder(order);
+            return new JsonResult(order);
         }
 
         // Get order by ID
